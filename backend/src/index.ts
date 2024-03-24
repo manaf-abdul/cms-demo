@@ -13,9 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Connect to MongoDB
-mongoose.connect(
-  "mongodb+srv://abdulmanaf:abdulmanaf@cluster0.lejcoqp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+mongoose.connect(process.env.MONGO_URI);
 let db = mongoose.connection;
 db.once("open", () => console.log("Connected to MongoDB"));
 db.on("disconnected", () => console.log("Disonnected to MongoDB"));

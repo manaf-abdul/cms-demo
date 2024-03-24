@@ -15,7 +15,7 @@ const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.use((0, cors_1.default)());
 // Connect to MongoDB
-mongoose_1.default.connect("mongodb+srv://abdulmanaf:abdulmanaf@cluster0.lejcoqp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+mongoose_1.default.connect(process.env.MONGO_URI);
 let db = mongoose_1.default.connection;
 db.once("open", () => console.log("Connected to MongoDB"));
 db.on("disconnected", () => console.log("Disonnected to MongoDB"));
