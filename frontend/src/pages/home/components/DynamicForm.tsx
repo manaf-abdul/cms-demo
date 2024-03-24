@@ -1,4 +1,5 @@
 import { Box, Button, CircularProgress, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, TextField } from "@mui/material";
+import { useEffect } from "react";
 import { Controller, ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
 
 interface IFormInput {
@@ -17,7 +18,7 @@ interface IFormInput {
 
 interface AuthProps {
     formConfig: any;
-    nextStepHandler: () => void;
+    nextStepHandler: (data: any) => void;
     previosStepHandler: () => void;
     isLoading: boolean
 }
@@ -29,7 +30,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
             .map((field: any) => [field.name, ""])
     );
 
-    const { control, handleSubmit, formState } = useForm<IFormInput>({
+    const { control, handleSubmit, formState,reset,resetField } = useForm<IFormInput>({
         defaultValues: defaultValues
 
         // storedState ? storedState :
@@ -38,15 +39,17 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
 
     const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
         console.log(data);
-        nextStepHandler()
+        nextStepHandler(data)
+        // resetField()
         // reset()
+
     };
 
     const backhandler = () => {
         previosStepHandler()
     }
 
-    const renderField = (field: { type: string, options?: { value: string; label: string }[] } & ControllerRenderProps<IFormInput, string>): JSX.Element => {
+    const renderField = (field: any & ControllerRenderProps<IFormInput, string>): JSX.Element => {
         switch (field.type) {
             case "text":
                 return (
@@ -55,7 +58,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                         fullWidth
                         placeholder={`Enter your ${field.name.toLowerCase()}`}
                         label={field.name}
-                        variant="outlined"
+                        variant={field.props.variant}
                         error={!!errors[field.name]}
                         helperText={errors[field.name]?.message}
                     />
@@ -67,11 +70,11 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                         {...field}
                         fullWidth
                         label={field.name}
-                        variant="outlined"
+                        variant={field.props.variant}
                         error={!!errors[field.name]}
                         helperText={errors[field.name]?.message}
                     >
-                        {field.options?.map(option => (
+                        {field.options?.map((option: any) => (
                             <MenuItem key={option.value} value={option.value}>
                                 {option.label}
                             </MenuItem>
@@ -85,38 +88,48 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                         fullWidth
                         label={field.name}
                         type="date"
-                        variant="outlined"
+                        variant={field.props.variant}
                         error={!!errors[field.name]}
                         helperText={errors[field.name]?.message}
                     />
                 );
             case "radio":
                 return (
-                    <>
-                        <FormLabel>{field.name}</FormLabel>
-                        <RadioGroup {...field}>
-                            {field.options?.map(option => (
-                                <FormControlLabel
-                                    key={option.value}
-                                    value={option.value}
-                                    control={<Radio />}
-                                    label={option.label}
-                                />
-                            ))}
-                        </RadioGroup>
-                    </>
+                    <Box className="flex items-center justify-evenly">
+                        <Box className="flex items-center justify-evenly border-4 py-2 px-2 w-[80%] rounded-lg">
+                            <FormLabel>{field.name}</FormLabel>
+                            <RadioGroup {...field}>
+                                {field.options?.map((option: any) => (
+                                    <FormControlLabel
+                                        key={option.value}
+                                        value={option.value}
+                                        control={<Radio />}
+                                        label={option.label}
+                                    />
+                                ))}
+                            </RadioGroup>
+                        </Box>
+                    </Box>
                 );
             case "file":
                 return (
-                    <TextField
-                        {...field}
-                        fullWidth
-                        label={field.name}
-                        type="file"
-                        variant="outlined"
-                        error={!!errors[field.name]}
-                        helperText={errors[field.name]?.message}
-                    />
+                    <Box className="flex items-center justify-evenly">
+                        <Box className="flex items-center justify-between border-4 py-2 px-2 w-[80%] rounded-lg">
+                            <label htmlFor={field.name}>
+                                Choose {field.name}
+                            </label>
+                            <input
+                                id={field.name}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    const selectedFile = e.target.files?.[0]; // Use optional chaining to handle null
+                                    if (selectedFile) {
+                                        field.onChange(selectedFile);
+                                    }
+                                }}
+                                type="file"
+                            />
+                        </Box>
+                    </Box>
                 );
             case "tel":
                 return (
@@ -125,7 +138,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                         fullWidth
                         label={field.name}
                         type="tel"
-                        variant="outlined"
+                        variant={field.props.variant}
                         error={!!errors[field.name]}
                         helperText={errors[field.name]?.message}
                     />
@@ -135,6 +148,10 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
         }
     };
 
+    useEffect(() => {
+        // Reset the form when formConfig changes
+        reset(defaultValues);
+    }, [formConfig]);
 
     return (
         <Box>
@@ -156,7 +173,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                                     name={fields.name}
                                     control={control}
                                     rules={fields.rules}
-                                    render={({ field }) => renderField({ ...field, type: fields.type, options: fields.options })}
+                                    render={({ field }) => renderField({ ...field, type: fields.type, options: fields.options,props:fields.props })}
                                 />
                             </Box>
                         )

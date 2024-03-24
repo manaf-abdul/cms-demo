@@ -17,6 +17,8 @@ export default function Home() {
     const [activeStep, setActiveStep] = useState(0)
     const [currentStepData, setCurrentStepData] = useState<any>({})
     const [loading, setLoading] = useState(false)
+    const [dataSet, setDataSet] = useState({})
+   
     const { accessToken } = useSelector((state: RootState) => state.user);
 
     const navigate = useNavigate()
@@ -32,9 +34,18 @@ export default function Home() {
         }
     }, [accessToken, navigate]);
 
-    const nextStepHandler = async () => {
+    console.log("111",dataSet)
+
+    const nextStepHandler = async (data: any) => {
         try {
+            let formValues={...dataSet,...data}
+            setDataSet(formValues)
             const nextStep = formData.findIndex((elm: any) => currentStepData._id === elm._id) + 1
+            if (nextStep === formData.length) {
+                console.log(formValues,"form Submission Logic")
+                //INVOKE AI IF NEEDED
+                navigate(generatePath(ROUTES.success))
+            }
             if (!(nextStep > formData.length - 1)) {
                 setCurrentStepData(formData[nextStep])
             }
