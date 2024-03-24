@@ -61,7 +61,7 @@ const Forms = () => {
             const transformedArray = newItems.map(item => item._id);
             try {
                 setLoading(true)
-                await editFormFlow({ registrationFlow: transformedArray,theme })
+                await editFormFlow({ registrationFlow: transformedArray, theme })
                 setForms(newItems);
             } catch (error: any) {
                 enqueueSnackbar(error.message, { variant: "error" });
@@ -84,6 +84,12 @@ const Forms = () => {
             <Typography>
                 Drag and Drop to rearrange
             </Typography>
+            {!loading && <> <Typography>
+                Select theme
+            </Typography>
+                <MuiColorInput format="hex" value={theme.colorCode} onChange={handleChange} />
+            </>
+            }
             <div className="sortable-list">
                 {loading ? <CircularProgressBar /> :
                     <List dense={true} sx={{ fontSize: "5rem" }}>
@@ -102,7 +108,18 @@ const Forms = () => {
                                 onDrop={(e) => handleDrop(e, item)}
                             >
                                 <div className="details">
-                                    <ListItem key={index} sx={{ border: 1, borderRadius: "1rem", marginTop: 1, cursor: "grab" }} className='px-16 py-2' onClick={() => navigateHandler(item._id)}>
+                                    {/*   */}
+                                    <ListItem key={index}
+                                        sx={{
+                                            // border: 1,
+                                            borderRadius: "1rem",
+                                            marginTop: 1,
+                                            cursor: "grab",
+                                            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.4)", // Add box shadow
+                                            '&:hover': {
+                                                boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.5)", // Increase box shadow on hover
+                                            },
+                                        }} className='px-16 py-2' onClick={() => navigateHandler(item._id)}>
                                         <ListItemIcon>
                                             <FolderIcon sx={{ fontSize: "2rem" }} />
                                         </ListItemIcon>
@@ -114,14 +131,9 @@ const Forms = () => {
                                 </div>
                             </div>
                         ))}
-                    </List>}
+                    </List>
+                }
             </div>
-            {!loading && <> <Typography>
-                Select theme
-            </Typography>
-                <MuiColorInput format="hex" value={theme.colorCode} onChange={handleChange} />
-            </>
-            }
         </Box>
     )
 }

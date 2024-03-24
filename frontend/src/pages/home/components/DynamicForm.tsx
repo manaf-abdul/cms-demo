@@ -29,7 +29,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
             .map((field: any) => [field.name, ""])
     );
 
-    const { control, handleSubmit, formState, reset } = useForm<IFormInput>({
+    const { control, handleSubmit, formState } = useForm<IFormInput>({
         defaultValues: defaultValues
 
         // storedState ? storedState :

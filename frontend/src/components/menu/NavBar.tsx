@@ -19,7 +19,6 @@ import { useDispatch } from 'react-redux';
 import { removeUser } from '../../store/slices/userSlice';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Logout'];
 
 function NavBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);

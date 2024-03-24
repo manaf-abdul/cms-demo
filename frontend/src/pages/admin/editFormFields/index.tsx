@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { editFormVisbility, getFormById } from '../../../services/adminService'
 import { useParams } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
@@ -60,7 +60,6 @@ const EditFormVisibility = () => {
                 className="capitalize"
                 fontWeight="bold"
                 variant="h4"
-            //   color="white"
             >
                 {form?.formName}
             </Typography>
@@ -70,7 +69,15 @@ const EditFormVisibility = () => {
                     subheader={<ListSubheader>Fields</ListSubheader>}
                 >
                     {form?.formFields?.map((field: any) => (
-                        <ListItem key={field._id}>
+                        <ListItem key={field._id}
+                            sx={{
+                                borderRadius: "1rem",
+                                marginTop: 1,
+                                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Add box shadow
+                                '&:hover': {
+                                    boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.5)", // Increase box shadow on hover
+                                },
+                            }}>
                             <ListItemIcon>
                                 <CommentIcon /> {/* Use your icon based on field type */}
                             </ListItemIcon>
