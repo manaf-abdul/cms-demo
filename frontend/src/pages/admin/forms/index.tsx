@@ -21,7 +21,6 @@ const Forms = () => {
             setLoading(true)
             const data = await getForms()
             setForms(data.registrationFlow)
-            // setValue()
             setTheme({ colorCode: data.theme.colorCode })
         } catch (error: any) {
             enqueueSnackbar(error.message, { variant: "error" });

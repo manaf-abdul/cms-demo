@@ -43,7 +43,7 @@ export default function Home() {
                 return nextStep >= formData.length + 1 ? prevActiveStep : nextStep;
             });
         } catch (error) {
-
+            console.log("error", error)
         } finally {
             setLoading(false)
         }
@@ -57,7 +57,7 @@ export default function Home() {
             }
             setActiveStep(prevActiveStep => Math.max(prevActiveStep - 1, 0));
         } catch (error) {
-
+            console.log("error", error)
         } finally {
             setLoading(false)
         }

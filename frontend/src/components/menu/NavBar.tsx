@@ -42,9 +42,12 @@ function NavBar() {
     };
 
     const logOutHandler=()=>{
-
         dispatch(removeUser())
         navigate(generatePath(ROUTES.home))
+    }
+
+    const navigateHandler = () => {
+        navigate(generatePath(ROUTES.forms));
     }
 
     return (
@@ -160,13 +163,11 @@ function NavBar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {/* {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))} */}
                             <MenuItem onClick={handleCloseUserMenu}>
                                 <Button onClick={logOutHandler}>Logout</Button>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseUserMenu}>
+                                <Button onClick={navigateHandler}>ADMIN</Button>
                             </MenuItem>
                         </Menu>
                     </Box>
