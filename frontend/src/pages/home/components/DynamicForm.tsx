@@ -30,7 +30,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
             .map((field: any) => [field.name, ""])
     );
 
-    const { control, handleSubmit, formState,reset,resetField } = useForm<IFormInput>({
+    const { control, handleSubmit, formState, reset } = useForm<IFormInput>({
         defaultValues: defaultValues
 
         // storedState ? storedState :
@@ -173,7 +173,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                                     name={fields.name}
                                     control={control}
                                     rules={fields.rules}
-                                    render={({ field }) => renderField({ ...field, type: fields.type, options: fields.options,props:fields.props })}
+                                    render={({ field }) => renderField({ ...field, type: fields.type, options: fields.options, props: fields.props })}
                                 />
                             </Box>
                         )
