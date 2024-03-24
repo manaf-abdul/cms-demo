@@ -6,14 +6,17 @@ import store from "store";
 // store.addPlugin(expirePlugin);
 
 const USER_KEY = "USER";
-
+const theme: any = {
+  colorCode: "ed4657",
+};
 // Define a type for the slice state
 interface UserState {
   email: string;
-  // phone: string;
-  // name: string;
-  // accessToken: string | undefined;
-  // userType: string;
+  accessToken: string | undefined;
+  userType: string;
+  theme: {
+    colorCode: "ed4657";
+  };
 }
 
 const existingUser = store.get(USER_KEY) || undefined;
@@ -21,10 +24,9 @@ const existingUser = store.get(USER_KEY) || undefined;
 // Define the initial state using that type
 const initialState: UserState = {
   email: existingUser?.email || "",
-  // phone: existingUser?.phone || "",
-  // accessToken: existingUser?.accessToken || "",
-  // name: existingUser?.name || "",
-  // userType: existingUser?.userType || "",
+  accessToken: existingUser?.accessToken || "",
+  userType: existingUser?.userType || "",
+  theme: existingUser?.app.theme || theme,
 };
 
 export const userSlice = createSlice({
@@ -33,18 +35,17 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, { payload }) => {
       state.email = payload.email;
-      // state.phone = payload.phone;
-      // state.accessToken = payload.accessToken;
-      // state.name = payload.name;
+      state.accessToken = payload.accessToken;
       // state.userType = payload.userType;
+      state.theme = payload.app.theme;
+
       store.set(USER_KEY, payload);
     },
     removeUser: (state) => {
       state.email = "";
-      // state.phone = "";
-      // state.accessToken = "";
-      // state.name = "";
+      state.accessToken = "";
       // state.userType = "";
+      state.theme = theme;
 
       store.remove(USER_KEY);
     },

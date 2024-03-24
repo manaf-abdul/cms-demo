@@ -8,7 +8,7 @@ const BottomNav = () => {
             alignItems="center"
             className="fixed bottom-0 w-full pb-3 pt-3"
             sx={{
-                backgroundColor: "white",
+                backgroundColor: "grey",
             }}
         >
             <Typography variant="caption">

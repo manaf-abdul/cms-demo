@@ -1,7 +1,7 @@
 import instance from "axios";
 
 const axios = instance.create({
-  baseURL: import.meta.env.VITE_REST_BASE_URL,
+  baseURL: "http://localhost:3000/api/",
   timeout: 29000,
 });
 
@@ -14,6 +14,7 @@ axios.interceptors.response.use(
     let statusCode = 400;
 
     if (error.response) {
+      console.log(error,"error")
       statusCode = error.response.status;
       errorText =
         error.response.data.response ||

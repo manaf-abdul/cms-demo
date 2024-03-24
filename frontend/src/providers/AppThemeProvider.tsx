@@ -10,13 +10,13 @@ export interface IAppThemeProviderProps {
 }
 
 const AppThemeProvider = ({ children }: IAppThemeProviderProps) => {
-  // const { theme }: any = useSelector((state: RootState) => state.a);
+  const { theme }: any = useSelector((state: RootState) => state.user);
 
   // let theme=undefined
 
   const appTheme = useMemo(() => {
-    return generateAppTheme();
-  }, []);
+    return generateAppTheme(theme);
+  }, [theme]);
 
   return (
     <>

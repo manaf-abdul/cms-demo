@@ -5,15 +5,21 @@ import { Container, Grid } from '@mui/material'
 const Layout = ({ children }: any) => {
     return (
         <>
-            <Grid container>
+            <Grid container sx={{ background: "#dbdbdb" }}>
                 <NavBar />
                 <Container className="p-5"
                     sx={{
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center"
+                        width: "100%"
                     }}>
-                    <Grid item xs={12} md={10} lg={10}>
+                    <Grid item xs={12} md={12} lg={12}
+                        className='p-4'
+                        sx={{
+                            background: "white",
+                            borderRadius: "1rem",
+                            minHeight: "80vh"
+                        }}>
                         {children}
                     </Grid>
                 </Container>

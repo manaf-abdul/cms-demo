@@ -1,5 +1,8 @@
 export const ROUTES = {
-    home: "/",
-    login: "/login",
-  };
-  
+  home: "/",
+  forms: "/admin/forms",
+  editFormVisbility: "/admin/edit-form/:formId",
+  login: "/login",
+  signUp: "/sign-up",
+  notfound: "*",
+};

@@ -1,37 +1,42 @@
-import { LoadingButton } from "@mui/lab";
-import { Box, Button, MenuItem, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, TextField } from "@mui/material";
 import { Controller, ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
 
 interface IFormInput {
     [key: string]: string;
 }
 
-interface FormField {
-    name: string;
-    label: string;
-    type: string;
-    visibility: boolean;
-    rules: Record<string, any>;
-    options?: { value: string; label: string }[]; // For select options
-    props?: Record<string, any>;
-}
+// interface FormField {
+//     name: string;
+//     label: string;
+//     type: string;
+//     visibility: boolean;
+//     rules: Record<string, any>;
+//     options?: { value: string; label: string }[]; // For select options
+//     props?: Record<string, any>;
+// }
 
 interface AuthProps {
-    formConfig: FormField[];
+    formConfig: any;
     nextStepHandler: () => void;
     previosStepHandler: () => void;
     isLoading: boolean
 }
 
 const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previosStepHandler, isLoading }) => {
-    const { control, handleSubmit, formState,reset } = useForm<IFormInput>({
-        defaultValues:
-            // storedState ? storedState :
-            Object.fromEntries(formConfig.map(field => [field.name, ""]))
+    const defaultValues = Object.fromEntries(
+        formConfig.formFields
+            .filter((field: any) => field.visibility) // Filter based on visibility
+            .map((field: any) => [field.name, ""])
+    );
+
+    const { control, handleSubmit, formState, reset } = useForm<IFormInput>({
+        defaultValues: defaultValues
+
+        // storedState ? storedState :
     });
     const { errors } = formState;
 
-    const onSubmit: SubmitHandler<IFormInput> = async(data: any) => {
+    const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
         console.log(data);
         nextStepHandler()
         reset()
@@ -85,6 +90,46 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                         helperText={errors[field.name]?.message}
                     />
                 );
+            case "radio":
+                return (
+                    <>
+                        <FormLabel>{field.name}</FormLabel>
+                        <RadioGroup {...field}>
+                            {field.options?.map(option => (
+                                <FormControlLabel
+                                    key={option.value}
+                                    value={option.value}
+                                    control={<Radio />}
+                                    label={option.label}
+                                />
+                            ))}
+                        </RadioGroup>
+                    </>
+                );
+            case "file":
+                return (
+                    <TextField
+                        {...field}
+                        fullWidth
+                        label={field.name}
+                        type="file"
+                        variant="outlined"
+                        error={!!errors[field.name]}
+                        helperText={errors[field.name]?.message}
+                    />
+                );
+            case "tel":
+                return (
+                    <TextField
+                        {...field}
+                        fullWidth
+                        label={field.name}
+                        type="tel"
+                        variant="outlined"
+                        error={!!errors[field.name]}
+                        helperText={errors[field.name]?.message}
+                    />
+                );
             default:
                 throw new Error(`Invalid field type: ${field.type}`);
         }
@@ -97,12 +142,14 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                 <Box
                     padding={4}
                     columnGap={4}
+                    marginTop={5}
+                    marginBottom={2}
                     rowGap={4}
                     display="flex"
                     flexWrap="wrap"
                     justifyContent="center"
                 >
-                    {formConfig.map((fields, index) => (
+                    {formConfig.formFields.map((fields: any, index: any) => (
                         fields.visibility && ( // Only render if visibility is true
                             <Box key={index} width="100%">
                                 <Controller
@@ -114,28 +161,28 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                             </Box>
                         )
                     ))}
-                    <Box display={"flex"}>
-                        <LoadingButton
+                    <Box display="flex" alignItems="center" justifyContent="space-evenly" sx={{ width: "100%", padding: 2 }}>
+                        <Button
                             onClick={backhandler}
                             variant="contained"
+                            // color="primary"
                             size="large"
                             fullWidth
                             disableElevation
                         >
                             Back
-                        </LoadingButton>
-                        <LoadingButton
+                        </Button>
+                        <Button
                             type="submit"
                             variant="contained"
                             size="large"
                             fullWidth
                             disableElevation
-                            loading={isLoading}
+                            disabled={isLoading}
                         >
-                            Proceed
-                        </LoadingButton>
+                            {isLoading ? <CircularProgress></CircularProgress> : "Proceed"}
+                        </Button>
                     </Box>
-
                 </Box>
             </form>
         </Box>
