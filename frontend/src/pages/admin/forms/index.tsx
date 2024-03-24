@@ -1,17 +1,18 @@
 import { enqueueSnackbar } from 'notistack'
 import { DragEvent, useEffect, useState } from 'react'
 import { editFormFlow, getForms } from '../../../services/adminService'
-import { Box, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import FolderIcon from '@mui/icons-material/Folder';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../route/routes';
 import CircularProgressBar from '../../../components/generic/CircularProgress';
-
+import { MuiColorInput } from 'mui-color-input'
 
 const Forms = () => {
     const [forms, setForms] = useState<any>([])
     const [loading, setLoading] = useState(false)
     const [draggingItem, setDraggingItem] = useState(null);
+    const [theme, setTheme] = useState({ colorCode: '#fffff' }); // Default color code
 
     const navigate = useNavigate()
 
@@ -20,6 +21,8 @@ const Forms = () => {
             setLoading(true)
             const data = await getForms()
             setForms(data.registrationFlow)
+            // setValue()
+            setTheme({ colorCode: data.theme.colorCode })
         } catch (error: any) {
             enqueueSnackbar(error.message, { variant: "error" });
         } finally {
@@ -58,7 +61,7 @@ const Forms = () => {
             const transformedArray = newItems.map(item => item._id);
             try {
                 setLoading(true)
-                await editFormFlow({ registrationFlow: transformedArray })
+                await editFormFlow({ registrationFlow: transformedArray,theme })
                 setForms(newItems);
             } catch (error: any) {
                 enqueueSnackbar(error.message, { variant: "error" });
@@ -72,8 +75,15 @@ const Forms = () => {
         fetchData()
     }, [])
 
+    const handleChange = (newValue: any) => {
+        console.log({ newValue })
+        setTheme({ colorCode: newValue });
+    }
     return (
-        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" gap={2}>
+            <Typography>
+                Drag and Drop to rearrange
+            </Typography>
             <div className="sortable-list">
                 {loading ? <CircularProgressBar /> :
                     <List dense={true} sx={{ fontSize: "5rem" }}>
@@ -106,7 +116,12 @@ const Forms = () => {
                         ))}
                     </List>}
             </div>
-
+            {!loading && <> <Typography>
+                Select theme
+            </Typography>
+                <MuiColorInput format="hex" value={theme.colorCode} onChange={handleChange} />
+            </>
+            }
         </Box>
     )
 }

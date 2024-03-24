@@ -6,20 +6,36 @@ import StepLabel from '@mui/material/StepLabel';
 import { useEffect, useState } from 'react';
 import { getUserForms } from '../../services/userService';
 import { enqueueSnackbar } from 'notistack';
+import { RootState } from '../../store';
+import { useSelector } from 'react-redux';
+import { generatePath, useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../route/routes';
+import GenericLoader from '../../components/generic/GenericLoader';
 
 export default function Home() {
     const [formData, setFormData] = useState([])
     const [activeStep, setActiveStep] = useState(0)
     const [currentStepData, setCurrentStepData] = useState<any>({})
     const [loading, setLoading] = useState(false)
+    const { accessToken } = useSelector((state: RootState) => state.user);
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        // Check if access token exists
+        if (!accessToken) {
+            // Redirect to login page
+            navigate(generatePath(ROUTES.login));
+        } else {
+            //Get user Forms
+            fetchData()
+        }
+    }, [accessToken, navigate]);
 
     const nextStepHandler = async () => {
         try {
-            setLoading(true)
             const nextStep = formData.findIndex((elm: any) => currentStepData._id === elm._id) + 1
-            console.log(nextStep)
-            if(!(nextStep>formData.length-1)){
-                console.log("inside")
+            if (!(nextStep > formData.length - 1)) {
                 setCurrentStepData(formData[nextStep])
             }
             setActiveStep(prevActiveStep => {
@@ -35,14 +51,10 @@ export default function Home() {
 
     const previousStepHandler = async () => {
         try {
-            setLoading(true)
             const nextStep = formData.findIndex((elm: any) => currentStepData._id === elm._id) - 1
-            console.log(nextStep)
-            if(!(nextStep<0)){
-                console.log("inside")
+            if (!(nextStep < 0)) {
                 setCurrentStepData(formData[nextStep])
             }
-            // setCurrentStepData(formData[nextStep])
             setActiveStep(prevActiveStep => Math.max(prevActiveStep - 1, 0));
         } catch (error) {
 
@@ -50,10 +62,6 @@ export default function Home() {
             setLoading(false)
         }
     };
-
-    useEffect(() => {
-        fetchData()
-    }, [])
 
     const fetchData = async () => {
         try {
@@ -69,21 +77,28 @@ export default function Home() {
     }
 
     return (
-        <Box sx={{ width: '100%'}}>
-            <Stepper activeStep={activeStep} alternativeLabel>
-                {formData.map((steps: any) => (
-                    <Step key={steps.formName}>
-                        <StepLabel>{steps.formName}</StepLabel>
-                    </Step>
-                ))}
-            </Stepper>
-            {currentStepData?.formName && <DynamicForm
-                formConfig={currentStepData}
-                nextStepHandler={nextStepHandler}
-                previosStepHandler={previousStepHandler}
-                isLoading={loading}
-            />}
-
+        <Box sx={{ width: '100%' }}>
+            {loading ? (
+                <GenericLoader />
+            ) : (
+                <>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                        {formData.map((steps: any) => (
+                            <Step key={steps.formName}>
+                                <StepLabel>{steps.formName}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                    {currentStepData?.formName && (
+                        <DynamicForm
+                            formConfig={currentStepData}
+                            nextStepHandler={nextStepHandler}
+                            previosStepHandler={previousStepHandler}
+                            isLoading={loading}
+                        />
+                    )}
+                </>
+            )}
         </Box>
     );
 }

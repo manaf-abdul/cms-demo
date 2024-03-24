@@ -2,12 +2,15 @@ import { TextField } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from '@mui/lab';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../route/routes";
 import { setUser } from "../../store/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { userLogin } from "../../services/userService";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
+
 interface IFormInput {
     email: string;
     password: string;
@@ -20,10 +23,19 @@ const Login = () => {
         },
     });
     const { errors } = formState;
+    const { accessToken } = useSelector((state: RootState) => state.user);
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        // Check if access token exists
+        if (accessToken) {
+            // Redirect to login page
+            navigate(generatePath(ROUTES.home));
+        }
+    }, [accessToken, navigate]);
 
     const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
         try {

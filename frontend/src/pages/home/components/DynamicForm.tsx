@@ -39,7 +39,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
     const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
         console.log(data);
         nextStepHandler()
-        reset()
+        // reset()
     };
 
     const backhandler = () => {

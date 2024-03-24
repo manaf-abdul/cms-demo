@@ -1,13 +1,12 @@
 import { TextField } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-// import { adminSignUp } from "../../services/adminServices";
 import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from '@mui/lab';
 import { useState } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../route/routes";
-import { setUser } from "../../store/slices/userSlice";
-import { useDispatch } from "react-redux";
+import { userSignUp } from "../../services/userService";
+
 interface IFormInput {
     password: string;
     email: string;
@@ -27,7 +26,7 @@ const SignUp = () => {
     const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
         try {
             setLoading(true)
-            // await adminSignUp(data)
+            await userSignUp(data)
             navigate(generatePath(ROUTES.login))
         } catch (error: any) {
             enqueueSnackbar(error.errorText ?? "Error Occured", { variant: "error" });
@@ -77,7 +76,7 @@ const SignUp = () => {
                         Create your free account
                     </p>
                     <p className="mt-6 text-center font-medium md:text-left" onClick={navigateHandler}>
-                        Already using TransPay?
+                        Already using AutoVert?
                         <a
                             href="#"
                             className="whitespace-nowrap font-semibold text-blue-700"
@@ -136,26 +135,6 @@ const SignUp = () => {
                                 )}
                             />
                         </div>
-                        {/* <div className="mb-4 flex flex-col pt-4">
-                            <Controller
-                                name="name"
-                                control={control}
-                                rules={{ required: "Name is required" }}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        fullWidth
-                                        placeholder="Enter your name"
-                                        label="Name"
-                                        type="text"
-                                        variant="outlined"
-                                        error={!!errors.name}
-                                        helperText={errors.name?.message}
-                                        className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none"
-                                    />
-                                )}
-                            />
-                        </div> */}
                         <LoadingButton
                             type="submit"
                             variant="contained"
