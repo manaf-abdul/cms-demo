@@ -1,8 +1,8 @@
 import instance from "axios";
 
 const axios = instance.create({
-  // baseURL: "http://localhost:3000/api/",
-  baseURL:"https://cms-demo-one.vercel.app/api/",
+  baseURL: "http://localhost:3000/api/",
+  // baseURL:"https://cms-demo-one.vercel.app/api/",
   timeout: 29000,
 });
 

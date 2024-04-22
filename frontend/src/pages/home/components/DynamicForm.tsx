@@ -38,7 +38,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
     const { errors } = formState;
 
     const onSubmit: SubmitHandler<IFormInput> = async (data: any) => {
-        console.log(data);
+        // console.log(data);
         nextStepHandler(data)
         // resetField()
         // reset()
@@ -172,7 +172,7 @@ const DynamicForm: React.FC<AuthProps> = ({ formConfig, nextStepHandler, previos
                                 <Controller
                                     name={fields.name}
                                     control={control}
-                                    rules={fields.rules}
+                                    // rules={fields.rules}
                                     render={({ field }) => renderField({ ...field, type: fields.type, options: fields.options, props: fields.props })}
                                 />
                             </Box>

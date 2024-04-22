@@ -8,6 +8,7 @@ import Notfound from "../pages/not-found";
 import SignUp from "../pages/signup";
 import SuccessPage from "../pages/success";
 import GenericLoader from "../components/generic/GenericLoader";
+import UpdatableEdge from "../pages/roboflow";
 
 const Forms = lazy(() => import('../pages/admin/forms'));
 const EditFormVisibility = lazy(() => import('../pages/admin/editFormFields'));
@@ -31,6 +32,8 @@ const AppRoutes = () => {
                 <Route path={ROUTES.login} element={<Login />} />
                 <Route path={ROUTES.signUp} element={<SignUp />} />
                 <Route path={ROUTES.notfound} element={<Notfound />} />
+                <Route path={ROUTES.reactflow} element={<Layout><UpdatableEdge /></Layout>} />
+               
             </Routes>
         </Router>
     );

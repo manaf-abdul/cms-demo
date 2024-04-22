@@ -32,7 +32,15 @@ const formsSchema = new Schema(
     formName: {
       type: String,
       required: false,
-      unique:true
+      unique: true
+    },
+    source: {
+      type: mongoose.Types.ObjectId, ref: "Forms",
+      required: true,
+    },
+    target: {
+      type: mongoose.Types.ObjectId, ref: "Forms",
+      required: true,
     },
     formFields: [formFieldSchema],
   },

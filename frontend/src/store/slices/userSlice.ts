@@ -7,7 +7,7 @@ import store from "store";
 
 const USER_KEY = "USER";
 const theme: any = {
-  colorCode: "ed4657",
+  colorCode: "#ed4657",
 };
 // Define a type for the slice state
 interface UserState {
@@ -15,7 +15,7 @@ interface UserState {
   accessToken: string | undefined;
   userType: string;
   theme: {
-    colorCode: "ed4657";
+    colorCode: "#ed4657";
   };
 }
 

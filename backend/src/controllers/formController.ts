@@ -48,3 +48,40 @@ export const getFormById = async (req: Request, res: Response) => {
     res.status(500).json(error);
   }
 };
+
+export const editTarget = async (req: Request, res: Response) => {
+  try {
+    const { _id, target, source } = req.body;
+    const myresult = await Form.findOneAndUpdate(
+      { target: target },
+      { $unset: { target: "" } },
+      { new: true }
+    );
+    const result = await Form.findOneAndUpdate(
+      { _id: _id },
+      { $set: { target: target, source: source } },
+      { new: true }
+    );
+    console.log(result)
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json(error);
+  }
+};
+
+export const deleteTarget = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.body;
+    const result = await Form.findOneAndUpdate(
+      { _id: _id },
+      { $unset: { source: "" } },
+      { new: true }
+    );
+    console.log(result)
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json(error);
+  }
+};

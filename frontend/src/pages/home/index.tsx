@@ -18,6 +18,8 @@ export default function Home() {
     const [currentStepData, setCurrentStepData] = useState<any>({})
     const [loading, setLoading] = useState(false)
     const [dataSet, setDataSet] = useState({})
+
+    console.log({currentStepData})
    
     const { accessToken } = useSelector((state: RootState) => state.user);
 
@@ -34,20 +36,25 @@ export default function Home() {
         }
     }, [accessToken, navigate]);
 
-    console.log("111",dataSet)
+    // console.log("111",dataSet)
 
     const nextStepHandler = async (data: any) => {
         try {
-            let formValues={...dataSet,...data}
-            setDataSet(formValues)
-            const nextStep = formData.findIndex((elm: any) => currentStepData._id === elm._id) + 1
+            console.log("here")
+            console.log({currentStepData})
+            // let formValues={...dataSet,...data}
+            // setDataSet(formValues)
+            const nextStep = formData.findIndex((elm: any) => currentStepData.target == elm._id) + 1
             if (nextStep === formData.length) {
-                console.log(formValues,"form Submission Logic")
+                // console.log(formValues,"form Submission Logic")
                 //INVOKE AI IF NEEDED
                 navigate(generatePath(ROUTES.success))
             }
             if (!(nextStep > formData.length - 1)) {
-                setCurrentStepData(formData[nextStep])
+                console.log({formData},nextStep)
+                let data=(formData[nextStep-1])
+                console.log({data})
+                setCurrentStepData(data)
             }
             setActiveStep(prevActiveStep => {
                 const nextStep = prevActiveStep + 1;
@@ -62,7 +69,7 @@ export default function Home() {
 
     const previousStepHandler = async () => {
         try {
-            const nextStep = formData.findIndex((elm: any) => currentStepData._id === elm._id) - 1
+            const nextStep = formData.findIndex((elm: any) => currentStepData.target === elm._id) - 1
             if (!(nextStep < 0)) {
                 setCurrentStepData(formData[nextStep])
             }
@@ -93,13 +100,14 @@ export default function Home() {
                 <GenericLoader />
             ) : (
                 <>
-                    <Stepper activeStep={activeStep} alternativeLabel>
+                    {/* <Stepper activeStep={activeStep} alternativeLabel>
                         {formData.map((steps: any) => (
                             <Step key={steps.formName}>
                                 <StepLabel>{steps.formName}</StepLabel>
                             </Step>
                         ))}
-                    </Stepper>
+                    </Stepper> */}
+                    {currentStepData?.formName}
                     {currentStepData?.formName && (
                         <DynamicForm
                             formConfig={currentStepData}
